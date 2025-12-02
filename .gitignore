@@ -1,42 +1,36 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# Dependencias
+/node_modules
 
-# Compiled output
+# Salida de compilación (Build)
 /dist
 /tmp
 /out-tsc
 /bazel-out
 
-# Node
-/node_modules
+# Archivos de caché de Angular (Angular 13+)
+/.angular/
+
+# Logs y depuración
 npm-debug.log
 yarn-error.log
-
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
+pnpm-debug.log
 testem.log
-/typings
 
-# System files
+# IDEs y Editores (VS Code, WebStorm, etc.)
+.idea/
+.vscode/
+*.swp
+*.swo
 .DS_Store
 Thumbs.db
+
+# Entornos locales (si usas variables de entorno personalizadas)
+.env
+.env.local
+
+# Cobertura de tests
+/coverage
+
+# Archivos misceláneos
+/.sass-cache
+/connect.lock
