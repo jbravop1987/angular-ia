@@ -1,0 +1,58 @@
+/* Header Component Styles */
+:host {
+  display: block;
+}
+
+header {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Button animations */
+button {
+  transition: all 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* Notification badges pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.absolute.bg-red-500,
+.absolute.bg-indigo-500 {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Dropdown menu animation */
+.absolute.right-0.mt-2 {
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* User avatar hover effect */
+.w-10.h-10.bg-indigo-600 {
+  transition: all 0.3s ease;
+}
+
+button:hover .w-10.h-10.bg-indigo-600 {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+}
