@@ -1,0 +1,36 @@
+# Dependencias
+/node_modules
+
+# Salida de compilación (Build)
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Archivos de caché de Angular (Angular 13+)
+/.angular/
+
+# Logs y depuración
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+testem.log
+
+# IDEs y Editores (VS Code, WebStorm, etc.)
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Entornos locales (si usas variables de entorno personalizadas)
+.env
+.env.local
+
+# Cobertura de tests
+/coverage
+
+# Archivos misceláneos
+/.sass-cache
+/connect.lock
