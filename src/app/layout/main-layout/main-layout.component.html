@@ -1,15 +1,17 @@
-<div class="layout-container h-screen flex overflow-hidden bg-slate-50">
-  <!-- Sidebar -->
-  <app-sidebar class="flex-shrink-0" />
+<div class="flex h-screen bg-slate-50">
+  <!-- Sidebar (Desktop) -->
+  <app-sidebar />
 
   <!-- Main Content Area -->
-  <div class="flex-1 flex flex-col overflow-hidden">
+  <div class="flex-1 flex flex-col md:ml-64">
     <!-- Header -->
     <app-header />
 
-    <!-- Content -->
-    <main class="flex-1 overflow-y-auto bg-slate-50">
-      <router-outlet />
+    <!-- Page Content -->
+    <main class="flex-1 overflow-y-auto">
+      <div class="container mx-auto px-4 py-6 lg:px-8">
+        <router-outlet />
+      </div>
     </main>
   </div>
 </div>

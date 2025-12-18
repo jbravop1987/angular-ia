@@ -1,82 +1,108 @@
-# Angular Enterprise SaaS Application
+# Angular IA v3 - Enterprise SaaS Application
+
+Aplicación Angular 18+ moderna con arquitectura enterprise, construida con las últimas características de Angular.
 
 ## 🚀 Características
 
-- **Angular 18+** con arquitectura Zoneless
-- **Standalone Components** sin módulos
-- **Signals API** para gestión de estado reactivo
+- **Angular 18+** con Standalone Components
+- **Zoneless** (sin zone.js) para mejor rendimiento
+- **Signals** para gestión de estado reactivo
 - **Control Flow** moderno (@if, @for)
-- **Tailwind CSS** + **FontAwesome 6** para UI
-- **Lazy Loading** en todas las rutas
-- **Autenticación** con Guards e Interceptors
-- **Diseño Responsive** Corporate SaaS
+- **TailwindCSS** para estilos
+- **FontAwesome 6** vía CDN
+- **Arquitectura limpia** y escalable
+- **Totalmente responsive** (móvil, tablet, desktop)
 
-## 📁 Estructura del Proyecto
+## 📦 Instalación
 
-\`\`\`
-src/
-├── environments/           # Variables de entorno
-├── app/
-│   ├── core/              # Servicios, Guards, Interceptors
-│   ├── features/          # Módulos de funcionalidad
-│   │   ├── auth/          # Login
-│   │   ├── dashboard/     # Dashboard principal
-│   │   └── users/         # Gestión de usuarios
-│   └── layout/            # Componentes de layout
-│       ├── components/    # Sidebar, Header
-│       └── main-layout/   # Layout principal
-\`\`\`
-
-## 🛠️ Instalación
-
-\`\`\`bash
-# Instalar dependencias
+```bash
 npm install
+```
 
-# Ejecutar en desarrollo
+## 🛠️ Desarrollo
+
+```bash
 npm start
+```
 
-# Build para producción
-npm run build
-\`\`\`
+La aplicación estará disponible en `http://localhost:4200/`
 
-## 🔐 Credenciales de Demo
+## 🏗️ Estructura del Proyecto
 
-- **Email:** admin@empresa.com
-- **Password:** admin123
+```
+src/
+├── app/
+│   ├── core/                 # Servicios, guards, interceptors
+│   ├── features/             # Módulos de características
+│   │   ├── auth/            # Login
+│   │   ├── dashboard/       # Dashboard principal
+│   │   └── users/           # Gestión de usuarios
+│   ├── layout/              # Componentes de layout
+│   │   ├── components/
+│   │   │   ├── sidebar/
+│   │   │   └── header/
+│   │   └── main-layout/
+│   ├── shared/              # Componentes compartidos
+│   │   ├── components/
+│   │   │   ├── toast/
+│   │   │   └── spinner/
+│   │   └── services/
+│   ├── app.routes.ts
+│   └── app.config.ts
+├── environments/
+└── styles.css
+```
 
-## 🎨 Tecnologías Utilizadas
+## 🔐 Login
 
-- Angular 18+ (Zoneless)
-- TypeScript 5.4+
-- Tailwind CSS 3.4+
+Credenciales de prueba:
+- Email: `admin@example.com`
+- Password: `123456`
+
+O cualquier email/password válido para desarrollo local.
+
+## 🎨 Tecnologías
+
+- Angular 18+
+- TypeScript 5.5
+- TailwindCSS 3.4
+- RxJS 7.8
 - FontAwesome 6
-- RxJS 7.8+
 
-## 📝 Características Técnicas
+## 📝 Características Principales
 
-### Zoneless Architecture
-La aplicación utiliza `provideExperimentalZonelessChangeDetection()` eliminando la dependencia de Zone.js para mejor rendimiento.
+### Autenticación
+- Login con validación de formularios
+- Guard para rutas protegidas
+- Interceptor HTTP para tokens
+- Fallback local para desarrollo
 
-### Signals
-Toda la gestión de estado reactivo utiliza la API de Signals de Angular para un código más limpio y eficiente.
+### Dashboard
+- Estadísticas en tiempo real
+- Actividad reciente
+- Acciones rápidas
+- Diseño corporate moderno
 
-### Lazy Loading
-Todas las rutas implementan lazy loading para optimizar el tiempo de carga inicial.
+### Gestión de Usuarios
+- Lista de usuarios con búsqueda
+- Crear/Editar/Eliminar usuarios
+- Modal de edición
+- Vista responsive
 
-### Variables de Entorno
-Las URLs de API y configuraciones están centralizadas en `src/environments/environment.ts`.
+### Componentes Globales
+- Toast notifications
+- Spinner de carga
+- Sidebar colapsable
+- Header con perfil de usuario
 
-## 🎯 Funcionalidades
+## 🚀 Build para Producción
 
-- ✅ Sistema de autenticación con fallback
-- ✅ Dashboard con métricas y estadísticas
-- ✅ Gestión de usuarios (CRUD)
-- ✅ Sidebar colapsable
-- ✅ Header con menú de usuario
-- ✅ Búsqueda y filtros
-- ✅ Diseño responsive
+```bash
+npm run build
+```
+
+Los archivos compilados estarán en `dist/`
 
 ## 📄 Licencia
 
-© 2025 Enterprise SaaS - v1.0.0
+MIT

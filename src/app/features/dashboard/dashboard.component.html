@@ -1,161 +1,104 @@
-<div class="p-6 space-y-6">
-  <!-- Welcome Header -->
-  <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-lg p-6 text-white">
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold mb-2">
-          <i class="fas fa-hand-wave mr-2"></i>
-          ¡Bienvenido, {{ userName() }}!
-        </h1>
-        <p class="text-indigo-100">
-          Aquí está un resumen de tu panel de control empresarial
-        </p>
-      </div>
-      <div class="hidden md:block">
-        <i class="fas fa-chart-pie text-6xl opacity-20"></i>
-      </div>
+<div class="space-y-6">
+  
+  <!-- Welcome Section -->
+  @if (authService.currentUser(); as user) {
+    <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-2xl p-8 text-white shadow-lg">
+      <h1 class="text-3xl font-bold mb-2">¡Bienvenido, {{ user.name }}!</h1>
+      <p class="text-indigo-100 text-lg">Aquí está un resumen de tu panel de control</p>
     </div>
-  </div>
+  }
 
-  <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    @for (card of cards; track card.title) {
-      <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow">
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    @for (stat of stats; track stat.title) {
+      <div class="bg-white rounded-xl shadow-md p-6 border border-slate-200 hover:shadow-lg transition-shadow">
         <div class="flex items-center justify-between mb-4">
-          <div class="flex-1">
-            <p class="text-sm text-slate-600 mb-1">{{ card.title }}</p>
-            <p class="text-2xl font-bold text-slate-800">{{ card.value }}</p>
+          <div [ngClass]="stat.bgColor" class="w-12 h-12 rounded-lg flex items-center justify-center">
+            <i [ngClass]="'fa-solid ' + stat.icon" class="text-white text-xl"></i>
           </div>
-          <div [class]="card.bgColor + ' w-12 h-12 rounded-lg flex items-center justify-center'">
-            <i [class]="'fas ' + card.icon + ' text-white text-xl'"></i>
-          </div>
+          <span 
+            class="text-sm font-semibold px-2 py-1 rounded-full"
+            [ngClass]="stat.isPositive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+            {{ stat.change }}
+          </span>
         </div>
-        <div class="flex items-center">
-          @if (card.changeType === 'positive') {
-            <i class="fas fa-arrow-up text-green-600 text-sm mr-1"></i>
-            <span class="text-sm font-medium text-green-600">{{ card.change }}</span>
-          } @else {
-            <i class="fas fa-arrow-down text-red-600 text-sm mr-1"></i>
-            <span class="text-sm font-medium text-red-600">{{ card.change }}</span>
-          }
-          <span class="text-sm text-slate-500 ml-2">vs. mes anterior</span>
-        </div>
+        <h3 class="text-slate-600 text-sm font-medium mb-1">{{ stat.title }}</h3>
+        <p class="text-2xl font-bold text-slate-900">{{ stat.value }}</p>
       </div>
     }
   </div>
 
   <!-- Two Column Layout -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
     <!-- Recent Activity -->
-    <div class="lg:col-span-2 bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-bold text-slate-800 flex items-center">
-          <i class="fas fa-clock-rotate-left text-indigo-600 mr-2"></i>
+    <div class="lg:col-span-2 bg-white rounded-xl shadow-md border border-slate-200">
+      <div class="p-6 border-b border-slate-200">
+        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i>
           Actividad Reciente
         </h2>
-        <button class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-          Ver todo
-          <i class="fas fa-arrow-right ml-1"></i>
-        </button>
       </div>
-      <div class="space-y-4">
-        @for (activity of recentActivities; track $index) {
-          <div class="flex items-start gap-4 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">
-              <i [class]="'fas ' + activity.icon + ' ' + activity.iconColor"></i>
+      <div class="p-6">
+        <div class="space-y-4">
+          @for (activity of recentActivities; track $index) {
+            <div class="flex items-start gap-4 p-4 rounded-lg hover:bg-slate-50 transition-colors">
+              <div class="flex-shrink-0">
+                <i [ngClass]="'fa-solid ' + activity.icon + ' ' + activity.color" class="text-xl"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm text-slate-900">
+                  <span class="font-semibold">{{ activity.user }}</span>
+                  <span class="text-slate-600"> {{ activity.action }}</span>
+                </p>
+                <p class="text-xs text-slate-500 mt-1">{{ activity.time }}</p>
+              </div>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm text-slate-800">
-                <span class="font-semibold">{{ activity.user }}</span>
-                <span class="text-slate-600"> {{ activity.action }}</span>
-              </p>
-              <p class="text-xs text-slate-500 mt-1">
-                <i class="far fa-clock mr-1"></i>
-                {{ activity.time }}
-              </p>
-            </div>
-          </div>
-        }
+          }
+        </div>
       </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-      <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
-        <i class="fas fa-bolt text-amber-600 mr-2"></i>
-        Acciones Rápidas
-      </h2>
-      <div class="space-y-3">
-        <button class="w-full flex items-center gap-3 p-3 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors">
-          <i class="fas fa-user-plus text-lg"></i>
-          <span class="font-medium">Agregar Usuario</span>
-        </button>
-        <button class="w-full flex items-center gap-3 p-3 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors">
-          <i class="fas fa-folder-plus text-lg"></i>
-          <span class="font-medium">Nuevo Proyecto</span>
-        </button>
-        <button class="w-full flex items-center gap-3 p-3 rounded-lg bg-violet-50 text-violet-700 hover:bg-violet-100 transition-colors">
-          <i class="fas fa-file-invoice text-lg"></i>
-          <span class="font-medium">Generar Reporte</span>
-        </button>
-        <button class="w-full flex items-center gap-3 p-3 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors">
-          <i class="fas fa-cog text-lg"></i>
-          <span class="font-medium">Configuración</span>
-        </button>
+    <div class="bg-white rounded-xl shadow-md border border-slate-200">
+      <div class="p-6 border-b border-slate-200">
+        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-bolt text-indigo-600"></i>
+          Acciones Rápidas
+        </h2>
       </div>
-
-      <!-- System Status -->
-      <div class="mt-6 pt-6 border-t border-slate-200">
-        <h3 class="text-sm font-semibold text-slate-700 mb-3">Estado del Sistema</h3>
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-600">API Status</span>
-            <span class="flex items-center text-xs text-green-600 font-medium">
-              <span class="w-2 h-2 bg-green-600 rounded-full mr-1"></span>
-              Online
-            </span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-600">Base de Datos</span>
-            <span class="flex items-center text-xs text-green-600 font-medium">
-              <span class="w-2 h-2 bg-green-600 rounded-full mr-1"></span>
-              Conectada
-            </span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-600">Último Backup</span>
-            <span class="text-xs text-slate-600">Hace 2 horas</span>
-          </div>
-        </div>
+      <div class="p-6 space-y-3">
+        <button class="w-full flex items-center gap-3 px-4 py-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-colors font-medium">
+          <i class="fa-solid fa-plus-circle"></i>
+          <span>Nuevo Proyecto</span>
+        </button>
+        <button class="w-full flex items-center gap-3 px-4 py-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg transition-colors font-medium">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>Agregar Usuario</span>
+        </button>
+        <button class="w-full flex items-center gap-3 px-4 py-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg transition-colors font-medium">
+          <i class="fa-solid fa-file-export"></i>
+          <span>Exportar Datos</span>
+        </button>
+        <button class="w-full flex items-center gap-3 px-4 py-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg transition-colors font-medium">
+          <i class="fa-solid fa-gear"></i>
+          <span>Configuración</span>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Chart Section (Placeholder) -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-      <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
-        <i class="fas fa-chart-line text-indigo-600 mr-2"></i>
-        Tendencia de Ventas
-      </h2>
-      <div class="h-64 flex items-center justify-center bg-slate-50 rounded-lg">
-        <div class="text-center text-slate-400">
-          <i class="fas fa-chart-area text-4xl mb-2"></i>
-          <p class="text-sm">Gráfico de ventas mensuales</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-      <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
-        <i class="fas fa-pie-chart text-emerald-600 mr-2"></i>
-        Distribución por Categoría
-      </h2>
-      <div class="h-64 flex items-center justify-center bg-slate-50 rounded-lg">
-        <div class="text-center text-slate-400">
-          <i class="fas fa-chart-pie text-4xl mb-2"></i>
-          <p class="text-sm">Distribución de recursos</p>
-        </div>
+  <!-- Chart Placeholder -->
+  <div class="bg-white rounded-xl shadow-md border border-slate-200 p-6">
+    <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-chart-area text-indigo-600"></i>
+      Estadísticas de Crecimiento
+    </h2>
+    <div class="h-64 bg-slate-50 rounded-lg flex items-center justify-center border-2 border-dashed border-slate-300">
+      <div class="text-center">
+        <i class="fa-solid fa-chart-line text-slate-400 text-5xl mb-4"></i>
+        <p class="text-slate-500 font-medium">Gráfico de estadísticas</p>
+        <p class="text-sm text-slate-400 mt-1">Integración con Chart.js o similar</p>
       </div>
     </div>
   </div>

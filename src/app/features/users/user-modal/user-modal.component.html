@@ -1,0 +1,146 @@
+@if (isOpen) {
+  <div class="fixed inset-0 bg-slate-900 bg-opacity-50 z-50 flex items-center justify-center p-4 animate-fade-in">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden animate-slide-in">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between p-6 border-b border-slate-200">
+        <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+          <i [ngClass]="isEditMode() ? 'fa-pen-to-square' : 'fa-user-plus'" class="fa-solid text-indigo-600"></i>
+          {{ isEditMode() ? 'Editar Usuario' : 'Nuevo Usuario' }}
+        </h2>
+        <button 
+          (click)="onClose()"
+          class="text-slate-400 hover:text-slate-600 transition-colors">
+          <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="p-6">
+        <div class="space-y-5">
+          
+          <!-- Name Field -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-slate-700 mb-2">
+              Nombre Completo <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fa-solid fa-user text-slate-400"></i>
+              </div>
+              <input
+                id="name"
+                type="text"
+                formControlName="name"
+                placeholder="Ej: Juan Pérez"
+                class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                [ngClass]="{
+                  'border-red-500 focus:ring-red-500': userForm.get('name')?.invalid && userForm.get('name')?.touched
+                }">
+            </div>
+            @if (getErrorMessage('name')) {
+              <p class="mt-1 text-sm text-red-600">
+                <i class="fa-solid fa-circle-exclamation mr-1"></i>
+                {{ getErrorMessage('name') }}
+              </p>
+            }
+          </div>
+
+          <!-- Email Field -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-slate-700 mb-2">
+              Email <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fa-solid fa-envelope text-slate-400"></i>
+              </div>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                placeholder="usuario@example.com"
+                class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                [ngClass]="{
+                  'border-red-500 focus:ring-red-500': userForm.get('email')?.invalid && userForm.get('email')?.touched
+                }">
+            </div>
+            @if (getErrorMessage('email')) {
+              <p class="mt-1 text-sm text-red-600">
+                <i class="fa-solid fa-circle-exclamation mr-1"></i>
+                {{ getErrorMessage('email') }}
+              </p>
+            }
+          </div>
+
+          <!-- Role Field -->
+          <div>
+            <label for="role" class="block text-sm font-medium text-slate-700 mb-2">
+              Rol <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fa-solid fa-shield-halved text-slate-400"></i>
+              </div>
+              <select
+                id="role"
+                formControlName="role"
+                class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors appearance-none">
+                <option value="User">Usuario</option>
+                <option value="Editor">Editor</option>
+                <option value="Admin">Administrador</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <i class="fa-solid fa-chevron-down text-slate-400 text-sm"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phone Field -->
+          <div>
+            <label for="phone" class="block text-sm font-medium text-slate-700 mb-2">
+              Teléfono
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fa-solid fa-phone text-slate-400"></i>
+              </div>
+              <input
+                id="phone"
+                type="tel"
+                formControlName="phone"
+                placeholder="+1234567890"
+                class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                [ngClass]="{
+                  'border-red-500 focus:ring-red-500': userForm.get('phone')?.invalid && userForm.get('phone')?.touched
+                }">
+            </div>
+            @if (getErrorMessage('phone')) {
+              <p class="mt-1 text-sm text-red-600">
+                <i class="fa-solid fa-circle-exclamation mr-1"></i>
+                {{ getErrorMessage('phone') }}
+              </p>
+            }
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-slate-200">
+          <button
+            type="button"
+            (click)="onClose()"
+            class="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors font-medium">
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            [disabled]="userForm.invalid"
+            class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+            <i class="fa-solid fa-save"></i>
+            {{ isEditMode() ? 'Actualizar' : 'Crear' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

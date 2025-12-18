@@ -1,0 +1,46 @@
+<div class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
+  @for (toast of toastService.toastList(); track toast.id) {
+    <div 
+      class="animate-slide-in rounded-lg shadow-lg p-4 flex items-start gap-3 min-w-[300px]"
+      [ngClass]="{
+        'bg-green-50 border-l-4 border-green-500': toast.type === 'success',
+        'bg-red-50 border-l-4 border-red-500': toast.type === 'error',
+        'bg-yellow-50 border-l-4 border-yellow-500': toast.type === 'warning',
+        'bg-blue-50 border-l-4 border-blue-500': toast.type === 'info'
+      }">
+      <div class="flex-shrink-0">
+        @if (toast.type === 'success') {
+          <i class="fa-solid fa-circle-check text-green-500 text-xl"></i>
+        }
+        @if (toast.type === 'error') {
+          <i class="fa-solid fa-circle-xmark text-red-500 text-xl"></i>
+        }
+        @if (toast.type === 'warning') {
+          <i class="fa-solid fa-triangle-exclamation text-yellow-500 text-xl"></i>
+        }
+        @if (toast.type === 'info') {
+          <i class="fa-solid fa-circle-info text-blue-500 text-xl"></i>
+        }
+      </div>
+      
+      <div class="flex-1">
+        <p 
+          class="text-sm font-medium"
+          [ngClass]="{
+            'text-green-800': toast.type === 'success',
+            'text-red-800': toast.type === 'error',
+            'text-yellow-800': toast.type === 'warning',
+            'text-blue-800': toast.type === 'info'
+          }">
+          {{ toast.message }}
+        </p>
+      </div>
+      
+      <button 
+        (click)="removeToast(toast.id)"
+        class="flex-shrink-0 text-slate-400 hover:text-slate-600 transition-colors">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  }
+</div>

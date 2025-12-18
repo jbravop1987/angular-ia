@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { Router, type CanActivateFn } from '@angular/router';
+import { Router, CanActivateFn } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
@@ -10,8 +10,10 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // Redirect to login with return url
-  return router.createUrlTree(['/auth/login'], {
+  // Guardar la URL intentada para redirección después del login
+  router.navigate(['/login'], { 
     queryParams: { returnUrl: state.url }
   });
+  
+  return false;
 };

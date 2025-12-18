@@ -1,23 +1,61 @@
-/* Tailwind CSS Configuration */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Global Styles */
-@layer base {
-  body {
-    @apply antialiased;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-400 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-500;
+}
+
+/* Animation utilities */
+@layer utilities {
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
   }
 }
 
-/* Custom Utilities */
-@layer utilities {
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
   }
-  
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

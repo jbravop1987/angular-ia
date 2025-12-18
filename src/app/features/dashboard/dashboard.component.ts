@@ -1,15 +1,6 @@
-import { Component, computed } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
-
-interface DashboardCard {
-  title: string;
-  value: string | number;
-  icon: string;
-  change: string;
-  changeType: 'positive' | 'negative';
-  bgColor: string;
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -19,55 +10,48 @@ interface DashboardCard {
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
-  currentUser = this.authService.currentUser;
-  
-  cards: DashboardCard[] = [
+  stats = [
     {
-      title: 'Total Usuarios',
-      value: 2847,
-      icon: 'fa-users',
+      title: 'Usuarios Totales',
+      value: '2,543',
       change: '+12.5%',
-      changeType: 'positive',
-      bgColor: 'bg-indigo-600'
+      isPositive: true,
+      icon: 'fa-users',
+      bgColor: 'bg-blue-500'
     },
     {
-      title: 'Ingresos Mensuales',
-      value: '$54,239',
-      icon: 'fa-dollar-sign',
+      title: 'Ingresos',
+      value: '$45,231',
       change: '+8.2%',
-      changeType: 'positive',
-      bgColor: 'bg-emerald-600'
+      isPositive: true,
+      icon: 'fa-dollar-sign',
+      bgColor: 'bg-green-500'
     },
     {
-      title: 'Tareas Completadas',
-      value: 342,
-      icon: 'fa-check-circle',
-      change: '-2.4%',
-      changeType: 'negative',
-      bgColor: 'bg-amber-600'
+      title: 'Proyectos',
+      value: '127',
+      change: '+4.7%',
+      isPositive: true,
+      icon: 'fa-briefcase',
+      bgColor: 'bg-indigo-500'
     },
     {
-      title: 'Rendimiento',
-      value: '94.8%',
+      title: 'Tasa de Conversión',
+      value: '3.24%',
+      change: '-2.1%',
+      isPositive: false,
       icon: 'fa-chart-line',
-      change: '+5.1%',
-      changeType: 'positive',
-      bgColor: 'bg-violet-600'
+      bgColor: 'bg-purple-500'
     }
   ];
 
   recentActivities = [
-    { user: 'Juan Pérez', action: 'Creó un nuevo proyecto', time: 'Hace 5 minutos', icon: 'fa-folder-plus', iconColor: 'text-blue-600' },
-    { user: 'María García', action: 'Completó una tarea', time: 'Hace 15 minutos', icon: 'fa-check', iconColor: 'text-green-600' },
-    { user: 'Carlos Ruiz', action: 'Subió un documento', time: 'Hace 1 hora', icon: 'fa-file-arrow-up', iconColor: 'text-purple-600' },
-    { user: 'Ana López', action: 'Comentó en un proyecto', time: 'Hace 2 horas', icon: 'fa-comment', iconColor: 'text-amber-600' },
-    { user: 'Pedro Sánchez', action: 'Actualizó el estado', time: 'Hace 3 horas', icon: 'fa-rotate', iconColor: 'text-indigo-600' }
+    { user: 'Juan Pérez', action: 'creó un nuevo proyecto', time: 'Hace 5 min', icon: 'fa-plus-circle', color: 'text-green-500' },
+    { user: 'María García', action: 'actualizó un documento', time: 'Hace 15 min', icon: 'fa-edit', color: 'text-blue-500' },
+    { user: 'Carlos López', action: 'completó una tarea', time: 'Hace 1 hora', icon: 'fa-check-circle', color: 'text-purple-500' },
+    { user: 'Ana Martínez', action: 'comentó en un proyecto', time: 'Hace 2 horas', icon: 'fa-comment', color: 'text-indigo-500' },
+    { user: 'Luis Rodríguez', action: 'subió un archivo', time: 'Hace 3 horas', icon: 'fa-upload', color: 'text-orange-500' }
   ];
 
-  userName = computed(() => {
-    const user = this.currentUser();
-    return user ? user.name : 'Usuario';
-  });
-
-  constructor(private authService: AuthService) {}
+  constructor(public authService: AuthService) {}
 }

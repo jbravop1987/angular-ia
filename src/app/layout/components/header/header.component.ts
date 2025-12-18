@@ -1,40 +1,40 @@
-import { Component, computed } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  currentUser = this.authService.currentUser;
-  showUserMenu = false;
+  isProfileMenuOpen = signal(false);
+  isMobileMenuOpen = signal(false);
 
-  userEmail = computed(() => {
-    const user = this.currentUser();
-    return user ? user.email : '';
-  });
+  constructor(public authService: AuthService) {}
 
-  userName = computed(() => {
-    const user = this.currentUser();
-    return user ? user.name : 'Usuario';
-  });
+  toggleProfileMenu(): void {
+    this.isProfileMenuOpen.update(value => !value);
+  }
 
-  userInitials = computed(() => {
-    const name = this.userName();
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-  });
-
-  constructor(private authService: AuthService) {}
-
-  toggleUserMenu(): void {
-    this.showUserMenu = !this.showUserMenu;
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen.update(value => !value);
   }
 
   logout(): void {
     this.authService.logout();
+    this.isProfileMenuOpen.set(false);
+  }
+
+  getInitials(name: string): string {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   }
 }

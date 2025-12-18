@@ -12,6 +12,10 @@ export interface LoginCredentials {
 }
 
 export interface AuthResponse {
-  token: string;
-  user: User;
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+    token: string;
+  };
 }

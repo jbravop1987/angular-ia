@@ -1,66 +1,59 @@
 <aside 
-  [class.collapsed]="isCollapsed()"
-  class="sidebar bg-slate-900 text-white h-full flex flex-col transition-all duration-300"
-  [class.w-64]="!isCollapsed()"
-  [class.w-20]="isCollapsed()">
+  [ngClass]="isCollapsed() ? 'w-20' : 'w-64'"
+  class="hidden md:flex flex-col bg-slate-800 text-white transition-all duration-300 h-screen fixed left-0 top-0">
   
-  <!-- Logo / Brand -->
-  <div class="p-6 border-b border-slate-800">
-    <div class="flex items-center justify-between">
-      @if (!isCollapsed()) {
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-            <i class="fas fa-building text-white text-xl"></i>
-          </div>
-          <div>
-            <h1 class="font-bold text-lg">Enterprise</h1>
-            <p class="text-xs text-slate-400">SaaS Platform</p>
-          </div>
-        </div>
-      } @else {
-        <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center mx-auto">
-          <i class="fas fa-building text-white text-xl"></i>
-        </div>
-      }
-    </div>
+  <!-- Logo Section -->
+  <div class="p-6 border-b border-slate-700">
+    @if (isCollapsed()) {
+      <div class="flex justify-center">
+        <i class="fa-solid fa-chart-line text-indigo-400 text-2xl"></i>
+      </div>
+    } @else {
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-chart-line text-indigo-400 text-2xl"></i>
+        <span class="text-xl font-bold">SaaS App</span>
+      </div>
+    }
   </div>
 
-  <!-- Navigation -->
-  <nav class="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-hide">
-    @for (item of navItems; track item.route) {
-      <a
-        [routerLink]="item.route"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
-        class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg transition-colors hover:bg-slate-800"
-        [class.justify-center]="isCollapsed()"
-        [title]="isCollapsed() ? item.label : ''">
-        <i [class]="'fas ' + item.icon + ' text-lg'"></i>
-        @if (!isCollapsed()) {
-          <span class="font-medium">{{ item.label }}</span>
-        }
-      </a>
-    }
+  <!-- Navigation Links -->
+  <nav class="flex-1 p-4 space-y-2">
+    <a 
+      routerLink="/dashboard"
+      routerLinkActive="bg-indigo-600 text-white"
+      [routerLinkActiveOptions]="{ exact: false }"
+      class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors"
+      [title]="isCollapsed() ? 'Dashboard' : ''">
+      <i class="fa-solid fa-chart-line text-lg"></i>
+      @if (!isCollapsed()) {
+        <span class="font-medium">Dashboard</span>
+      }
+    </a>
+
+    <a 
+      routerLink="/users"
+      routerLinkActive="bg-indigo-600 text-white"
+      [routerLinkActiveOptions]="{ exact: false }"
+      class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors"
+      [title]="isCollapsed() ? 'Usuarios' : ''">
+      <i class="fa-solid fa-users text-lg"></i>
+      @if (!isCollapsed()) {
+        <span class="font-medium">Usuarios</span>
+      }
+    </a>
   </nav>
 
   <!-- Collapse Toggle Button -->
-  <div class="p-4 border-t border-slate-800">
-    <button
+  <div class="p-4 border-t border-slate-700">
+    <button 
       (click)="toggleSidebar()"
-      class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition-colors"
-      title="Contraer menú">
-      <i [class]="isCollapsed() ? 'fas fa-angles-right' : 'fas fa-angles-left'" class="text-lg"></i>
+      class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors">
+      <i 
+        [ngClass]="isCollapsed() ? 'fa-chevron-right' : 'fa-chevron-left'"
+        class="fa-solid text-sm"></i>
       @if (!isCollapsed()) {
-        <span class="font-medium">Contraer</span>
+        <span class="font-medium">Colapsar</span>
       }
     </button>
   </div>
-
-  <!-- Footer Info -->
-  @if (!isCollapsed()) {
-    <div class="p-4 border-t border-slate-800 text-center">
-      <p class="text-xs text-slate-500">© 2025 Enterprise SaaS</p>
-      <p class="text-xs text-slate-600 mt-1">v1.0.0</p>
-    </div>
-  }
 </aside>

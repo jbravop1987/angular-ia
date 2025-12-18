@@ -1,152 +1,117 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
-import { User } from '../../../core/models/user.models';
+import { UserService } from '../services/user.service';
+import { UserModalComponent } from '../user-modal/user-modal.component';
+import { ToastService } from '../../../shared/services/toast.service';
+import { User, CreateUserDto } from '../../../core/models/user.models';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, UserModalComponent],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css'
 })
 export class UserListComponent implements OnInit {
-  users = signal<User[]>([]);
-  isLoading = signal(true);
+  isModalOpen = signal(false);
+  selectedUser = signal<User | null>(null);
   searchTerm = signal('');
 
-  private readonly API_URL = environment.apiUrl;
-
-  constructor(private http: HttpClient) {}
+  constructor(
+    public userService: UserService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.userService.loadUsers();
   }
 
-  loadUsers(): void {
-    this.isLoading.set(true);
+  get filteredUsers(): User[] {
+    const term = this.searchTerm().toLowerCase();
+    if (!term) {
+      return this.userService.users();
+    }
     
-    // Intentar cargar desde API, con fallback a datos mock
-    this.http.get<User[]>(`${this.API_URL}/users`).subscribe({
-      next: (users) => {
-        this.users.set(users);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        // Fallback: Datos mock
-        console.warn('API no disponible, usando datos mock');
-        this.users.set(this.getMockUsers());
-        this.isLoading.set(false);
-      }
-    });
-  }
-
-  onSearch(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.searchTerm.set(target.value.toLowerCase());
-  }
-
-  getFilteredUsers(): User[] {
-    const term = this.searchTerm();
-    if (!term) return this.users();
-    
-    return this.users().filter(user => 
+    return this.userService.users().filter(user => 
       user.name.toLowerCase().includes(term) ||
       user.email.toLowerCase().includes(term) ||
       user.role.toLowerCase().includes(term)
     );
   }
 
-  onNewUser(): void {
-    console.log('Crear nuevo usuario');
-    // Implementar lógica de creación
+  openCreateModal(): void {
+    this.selectedUser.set(null);
+    this.isModalOpen.set(true);
   }
 
-  onEditUser(user: User): void {
-    console.log('Editar usuario:', user);
-    // Implementar lógica de edición
+  openEditModal(user: User): void {
+    this.selectedUser.set(user);
+    this.isModalOpen.set(true);
   }
 
-  onDeleteUser(user: User): void {
-    if (confirm(`¿Estás seguro de eliminar a ${user.name}?`)) {
-      this.users.update(users => users.filter(u => u.id !== user.id));
-      console.log('Usuario eliminado:', user);
+  closeModal(): void {
+    this.isModalOpen.set(false);
+    this.selectedUser.set(null);
+  }
+
+  onSaveUser(userData: CreateUserDto): void {
+    const currentUser = this.selectedUser();
+    
+    if (currentUser) {
+      // Edit mode
+      this.userService.updateUser(currentUser.id, userData).subscribe({
+        next: () => {
+          this.toastService.success('Usuario actualizado exitosamente');
+          this.closeModal();
+        },
+        error: () => {
+          this.toastService.error('Error al actualizar usuario');
+        }
+      });
+    } else {
+      // Create mode
+      this.userService.createUser(userData).subscribe({
+        next: () => {
+          this.toastService.success('Usuario creado exitosamente');
+          this.closeModal();
+        },
+        error: () => {
+          this.toastService.error('Error al crear usuario');
+        }
+      });
     }
   }
 
-  getStatusClass(status: string): string {
+  deleteUser(user: User): void {
+    if (confirm(`¿Estás seguro de eliminar a ${user.name}?`)) {
+      this.userService.deleteUser(user.id).subscribe({
+        next: () => {
+          this.toastService.success('Usuario eliminado exitosamente');
+        },
+        error: () => {
+          this.toastService.error('Error al eliminar usuario');
+        }
+      });
+    }
+  }
+
+  onSearch(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.searchTerm.set(target.value);
+  }
+
+  getStatusBadgeClass(status: string): string {
     return status === 'active' 
-      ? 'bg-green-100 text-green-800' 
-      : 'bg-red-100 text-red-800';
+      ? 'bg-green-100 text-green-700' 
+      : 'bg-red-100 text-red-700';
   }
 
   getRoleBadgeClass(role: string): string {
     const classes: Record<string, string> = {
-      'admin': 'bg-purple-100 text-purple-800',
-      'user': 'bg-blue-100 text-blue-800',
-      'manager': 'bg-indigo-100 text-indigo-800',
-      'guest': 'bg-slate-100 text-slate-800'
+      'admin': 'bg-purple-100 text-purple-700',
+      'user': 'bg-blue-100 text-blue-700',
+      'editor': 'bg-slate-100 text-slate-700'
     };
-    return classes[role.toLowerCase()] || 'bg-slate-100 text-slate-800';
-  }
-
-  private getMockUsers(): User[] {
-    return [
-      {
-        id: 1,
-        name: 'Juan Pérez',
-        email: 'juan.perez@empresa.com',
-        role: 'admin',
-        status: 'active',
-        createdAt: new Date('2024-01-15'),
-        avatar: 'https://ui-avatars.com/api/?name=Juan+Perez&background=4f46e5&color=fff'
-      },
-      {
-        id: 2,
-        name: 'María García',
-        email: 'maria.garcia@empresa.com',
-        role: 'manager',
-        status: 'active',
-        createdAt: new Date('2024-02-20'),
-        avatar: 'https://ui-avatars.com/api/?name=Maria+Garcia&background=059669&color=fff'
-      },
-      {
-        id: 3,
-        name: 'Carlos Ruiz',
-        email: 'carlos.ruiz@empresa.com',
-        role: 'user',
-        status: 'active',
-        createdAt: new Date('2024-03-10'),
-        avatar: 'https://ui-avatars.com/api/?name=Carlos+Ruiz&background=dc2626&color=fff'
-      },
-      {
-        id: 4,
-        name: 'Ana López',
-        email: 'ana.lopez@empresa.com',
-        role: 'user',
-        status: 'inactive',
-        createdAt: new Date('2024-01-25'),
-        avatar: 'https://ui-avatars.com/api/?name=Ana+Lopez&background=f59e0b&color=fff'
-      },
-      {
-        id: 5,
-        name: 'Pedro Sánchez',
-        email: 'pedro.sanchez@empresa.com',
-        role: 'manager',
-        status: 'active',
-        createdAt: new Date('2024-04-05'),
-        avatar: 'https://ui-avatars.com/api/?name=Pedro+Sanchez&background=8b5cf6&color=fff'
-      },
-      {
-        id: 6,
-        name: 'Laura Martínez',
-        email: 'laura.martinez@empresa.com',
-        role: 'user',
-        status: 'active',
-        createdAt: new Date('2024-05-12'),
-        avatar: 'https://ui-avatars.com/api/?name=Laura+Martinez&background=ec4899&color=fff'
-      }
-    ];
+    return classes[role] || 'bg-slate-100 text-slate-700';
   }
 }
