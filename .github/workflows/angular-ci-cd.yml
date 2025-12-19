@@ -24,13 +24,13 @@ jobs:
         run: npm run build -- --configuration=production
 
       - name: Build Docker image
-        run: docker build -t mydockerhubuser/nginx_server:latest .
+        run: docker build -t 949235192/nginx_server:latest .
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Push Docker image
-        run: docker push mydockerhubuser/nginx_server:latest
+        run: docker push 949235192/nginx_server:latest
 
   deploy:
     needs: build
@@ -44,7 +44,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            docker pull mydockerhubuser/nginx_server:latest
+            docker pull 949235192/nginx_server:latest
             docker stop nginx_server || true
             docker rm nginx_server || true
-            docker run -d --name nginx_server -p 80:80 mydockerhubuser/nginx_server:latest
+            docker run -d --name nginx_server -p 80:80 949235192/nginx_server:latest
