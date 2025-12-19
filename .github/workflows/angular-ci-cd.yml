@@ -63,3 +63,13 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "dist/angular-ia-v3/browser/*"
           target: ${{ secrets.VPS_PATH }}
+
+          # Bajar la última imagen pública
+          docker pull mydockerhubuser/nginx_server:latest
+
+          # Detener y eliminar contenedor viejo si existe
+          docker stop nginx_server || true
+          docker rm nginx_server || true
+
+          # Levantar contenedor con Nginx y Angular
+          docker run -d --name nginx_server -p 80:80 mydockerhubuser/nginx_server:latest
