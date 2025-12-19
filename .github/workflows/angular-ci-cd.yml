@@ -23,11 +23,6 @@ jobs:
       - name: Build Angular
         run: npm run build -- --configuration=production
 
-      - name: Prepare Docker context
-        run: |
-          mkdir -p docker/html
-          cp -r dist/angular-ia-v3/browser/* docker/html/
-
       - name: Build Docker image
         run: docker build -t mydockerhubuser/nginx_server:latest .
 
