@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build Angular
+    name: Build Angular & Docker
     runs-on: ubuntu-latest
 
     steps:
@@ -30,46 +30,10 @@ jobs:
       - name: Build Angular
         run: npm run build -- --configuration=production
 
-      # 5️⃣ Copiar build a carpeta de Docker
+      # 5️⃣ Preparar carpeta para Docker
       - name: Prepare Docker context
         run: |
           mkdir -p docker/html
           cp -r dist/angular-ia-v3/browser/* docker/html/
 
-      # 6️⃣ Build de la imagen Docker
-      - name: Build Docker image
-        run: |
-          docker build -t mydockerhubuser/nginx_server:latest docker/
-
-      # 7️⃣ (Opcional) Push a Docker Hub si quieres mantenerla en registry público)
-      # - name: Push Docker image
-      #   run: |
-      #     docker push mydockerhubuser/nginx_server:latest
-
-  deploy:
-    name: Deploy to VPS
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - name: SSH Deploy
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            mkdir -p ${{ secrets.VPS_PATH }}
-            cd ${{ secrets.VPS_PATH }}
-
-            # Copiar Dockerfile y carpeta html al VPS
-            rm -rf docker
-            mkdir -p docker/html
-            exit 0  # Aquí puedes usar scp-action para subir los archivos si quieres
-
-            # Build y run del contenedor
-            docker build -t nginx_server:latest docker/
-            docker stop nginx_server || true
-            docker rm nginx_server || true
-            docker run -d --name nginx_server -p 80:80 nginx_server:latest
+      # 6️⃣ Build de la imagen Docke
