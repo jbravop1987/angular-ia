@@ -47,4 +47,4 @@ jobs:
             docker pull 949235192/nginx_server:latest
             docker stop nginx_server || true
             docker rm nginx_server || true
-            docker run -d --name nginx_server -p 8080:80 949235192/nginx_server:latest
+            docker run -d --name angular-ai -p 8080:80 949235192/nginx_server:latest
